@@ -1,0 +1,39 @@
+/* READYLINK design tokens
+   Colors, shadows, font stack and safe-area padding live here.
+   Light theme = :root. Dark theme = the prefers-color-scheme block AND [data-theme="dark"]
+   (keep those two in sync when you change a dark color). */
+
+:root{
+  --bg:#E8EDF0; --surface:#F7FAFB; --ink:#0F1D26; --ink2:#44565F; --ink3:#78898F;
+  --line:rgba(15,29,38,.10); --line2:rgba(15,29,38,.18);
+  --accent:#0B6676; --accent-ink:#F4FBFC; --accent-soft:rgba(11,102,118,.10);
+  --hi:#D8402B; --mod:#D69410; --lo:#2F9468; --info:#3B6EA5;
+  --glass:rgba(247,250,251,.55); --glass-line:rgba(255,255,255,.8); --glass-solid:#F3F7F8;
+  --blob1:#BCD9E0; --blob2:#F1E3BE; --contour:rgba(15,29,38,.07);
+  --land:#CCDAD7; --inside:#D8E4E1; --mask:rgba(232,237,240,.62); --park:#B9D4BF; --blk:#CBD9D8; --road:#FFFFFF; --water:#A8CBD8; --zone:rgba(15,29,38,.28);
+  --shadow:0 1px 0 rgba(255,255,255,.7) inset,0 18px 38px -22px rgba(15,60,80,.35);
+  --sans:'Archivo',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0B1419; --surface:#121D24; --ink:#E5EEF1; --ink2:#9DB0B8; --ink3:#6A7D85;
+    --line:rgba(229,238,241,.10); --line2:rgba(229,238,241,.20);
+    --accent:#6CC3D1; --accent-ink:#06161B; --accent-soft:rgba(108,195,209,.13);
+    --hi:#FF6A52; --mod:#F2B84B; --lo:#55C48F; --info:#86B4E6;
+    --glass:rgba(20,32,40,.52); --glass-line:rgba(255,255,255,.09); --glass-solid:#13212A;
+    --blob1:#123642; --blob2:#3A2F18; --contour:rgba(229,238,241,.06);
+    --land:#101D25; --inside:#172B35; --mask:rgba(11,20,25,.62); --park:#1B3A31; --blk:#1E3340; --road:#3A5767; --water:#1C4252; --zone:rgba(229,238,241,.3);
+    --shadow:0 1px 0 rgba(255,255,255,.05) inset,0 18px 38px -22px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0B1419; --surface:#121D24; --ink:#E5EEF1; --ink2:#9DB0B8; --ink3:#6A7D85;
+  --line:rgba(229,238,241,.10); --line2:rgba(229,238,241,.20);
+  --accent:#6CC3D1; --accent-ink:#06161B; --accent-soft:rgba(108,195,209,.13);
+  --hi:#FF6A52; --mod:#F2B84B; --lo:#55C48F; --info:#86B4E6;
+  --glass:rgba(20,32,40,.52); --glass-line:rgba(255,255,255,.09); --glass-solid:#13212A;
+  --blob1:#123642; --blob2:#3A2F18; --contour:rgba(229,238,241,.06);
+  --land:#101D25; --inside:#172B35; --mask:rgba(11,20,25,.62); --park:#1B3A31; --blk:#1E3340; --road:#3A5767; --water:#1C4252; --zone:rgba(229,238,241,.3);
+  --shadow:0 1px 0 rgba(255,255,255,.05) inset,0 18px 38px -22px rgba(0,0,0,.7);
+}
