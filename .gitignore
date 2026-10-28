@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Secrets and local settings (the template ".env.example" IS committed)
+.env
+.env.*
+!.env.example
+
+# Local database files and uploaded photos (used from Phase 1)
+server/data/*
+!server/data/.gitkeep
+server/uploads/*
+!server/uploads/.gitkeep
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Logs and OS/editor files
+npm-debug.log*
+*.log
+.DS_Store
+Thumbs.db

@@ -3,7 +3,7 @@
 /* =========================================================
    8. EVENTS
    ========================================================= */
-async function adminUpdate(id,patch,msg){try{await API.updateReport(id,patch);await loadReports();toast(msg);render(true)}catch(e){toast('Update failed (demo)');render(true)}}
+async function adminUpdate(id,patch,msg){try{await API.updateReport(id,patch);await loadReports();toast(msg);render(true)}catch(e){toast((e&&e.userMessage)||'Update failed (demo)');render(true)}}
 const hashId=()=>location.hash.split('/')[3];
 document.addEventListener('click',async e=>{
   const t=e.target;
@@ -27,9 +27,16 @@ document.addEventListener('click',async e=>{
   if(k==='theme'){document.documentElement.dataset.theme=theme()==='dark'?'light':'dark';render(true)}
   if(k==='logout'){await API.signOut();S.admin=false;goto('#/home')}
   if(k==='dlg-no')closeDlg();
+  /* --- map view, offline-first demo --- */
+  if(k==='view'){S.mapView=a.dataset.v;S.hot=null;if($('#mstage'))refreshMap()}
+  if(k==='hot'){const i=+a.dataset.i;S.hot=S.hot===i?null:i;if($('#mstage'))refreshMap()}
+  if(k==='simoffline'){NET.sim=!NET.sim;await onConnectionChange();toast(NET.sim?'Simulating offline (demo)':'Offline simulation off')}
+  if(k==='syncnow')syncNow(a.dataset.id);
+  if(k==='retry-mine')loadMyReports();
+  if(k==='retry-boot')location.reload();
   if(k==='dlg-yes'){const f=S.dlg?.onYes;closeDlg();if(f)f()}
   if(k==='clear'){Object.assign(F(),blankFilter());render(true)}
-  if(k==='reset')openDlg({title:'Reset demo data?',body:'This removes reports you submitted and restores the sample reports. It only affects this browser.',yes:'Reset',onYes:async()=>{await API.resetDemo();await loadReports();D=newDraft();S.sel=null;S.heroSel='RL-029';S.pf=blankFilter();S.af=blankFilter();toast('Demo data reset');goto(location.hash.startsWith('#/admin')?'#/admin':'#/home')}});
+  if(k==='reset')openDlg({title:'Reset demo data?',body:'This removes reports you submitted and restores the sample reports. It only affects this browser.',yes:'Reset',onYes:async()=>{await API.resetDemo();await Promise.all([loadReports(),loadQueue(),loadInsights()]);NET.sim=false;S.mapView='markers';S.hot=null;D=newDraft();S.sel=null;S.heroSel='RL-029';S.pf=blankFilter();S.af=blankFilter();toast('Demo data reset');goto(location.hash.startsWith('#/admin')?'#/admin':'#/home')}});
   /* --- Report a risk wizard --- */
   if(k==='sample'){D.type=a.dataset.k;D.img=null;D.fname='';wizRender()}
   if(k==='rmphoto'){D.type=null;D.img=null;D.fname='';wizRender()}
@@ -54,7 +61,7 @@ document.addEventListener('input',e=>{if(e.target.id==='desc'){D.desc=e.target.v
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&document.body.classList.contains('menu-open')){closeMenu();$('.menubtn')?.focus();return}
   if(e.key==='Escape'&&S.dlg){closeDlg();return}
-  if((e.key==='Enter'||e.key===' ')&&e.target.matches?.('[data-pin],[data-go]')){e.preventDefault();e.target.dispatchEvent(new MouseEvent('click',{bubbles:true}))}});
+  if((e.key==='Enter'||e.key===' ')&&e.target.matches?.('[data-pin],[data-go],g[data-act]')){e.preventDefault();e.target.dispatchEvent(new MouseEvent('click',{bubbles:true}))}});
 
 /* mobile menu (<= 620px): CSS shows it only on small screens */
 function syncMenu(){const open=document.body.classList.contains('menu-open'),b=$('.menubtn'),m=$('#mmenu'),n=$('.nav')||$('.side');
@@ -65,6 +72,15 @@ addEventListener('hashchange',closeMenu);
 addEventListener('resize',()=>{if(innerWidth>620)closeMenu();else syncMenu()});
 addEventListener('scroll',()=>{if(document.body.classList.contains('menu-open'))syncMenu()},{passive:true});
 
-/* boot */
-S.admin=API.hasSession();
-loadReports().then(()=>render());
+/* boot. In server mode the page shows a loading message, then the reports from the database, or an error with a retry button. */
+const bootBox=(inner)=>pubShell(`<div class="wrap"><div class="glass" style="margin-top:46px">${inner}</div></div>`,'');
+async function boot(){
+  S.admin=API.hasSession();
+  await API.init();                                    // 'demo' or 'server' (see js/config.js)
+  if(API.mode==='server')$('#app').innerHTML=bootBox(`<div class="hint" role="status" aria-live="polite" aria-busy="true"><b>Loading reports…</b><span>Getting the latest reports from the server.</span></div>`);
+  try{await Promise.all([loadReports(),loadInsights(),applyConnectivity()])}
+  catch(err){
+    $('#app').innerHTML=bootBox(`<div class="hint" role="alert"><b>Couldn't load the reports</b><span>${esc((err&&err.userMessage)||'Something went wrong while loading. Please try again.')}</span><button class="btn primary" data-act="retry-boot">Try again</button></div>`);
+    return}
+  render()}
+boot();

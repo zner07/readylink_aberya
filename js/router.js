@@ -14,10 +14,11 @@ function render(keepScroll){
   }else{
     const m={home:pageHome,report:pageReport,map:()=>pageMap(false),mine:pageMine};
     h=pubShell(p[0]==='track'?pageTrack(p[1]):(m[p[0]]||pageHome)(),p[0]==='track'?'mine':(m[p[0]]?p[0]:'home'))}
-  S.prev=p[0];
+  const prevRoute=S.prev;S.prev=p[0];
   $('#app').innerHTML=h;if(!keepScroll)scrollTo(0,0);
   document.querySelectorAll('[data-go]').forEach(e=>{e.tabIndex=0;e.setAttribute('role','link')});
   syncMenu();
+  if(p[0]==='mine'&&API.mode==='server'&&prevRoute!=='mine')loadMyReports(); // server mode: load this device's reports from GET /api/reports?mine=1
   if($('#wizMain'))wizRender();
   const q=$('#q');if(q)q.oninput=()=>{F().q=q.value;const k=q.selectionStart;render(true);const n=$('#q');n.focus();n.setSelectionRange(k,k)};
   const lf=$('#lf');if(lf)lf.onsubmit=async e=>{e.preventDefault();const err=$('#lerr'),b=$('#lbtn');

@@ -16,7 +16,7 @@ function pubShell(inner,on){
    <a href="#/admin" class="mi sep">${ic('shield',18)}<span>Admin</span></a>
    <button class="mi" data-act="theme">${ic(theme()==='dark'?'sun':'moon',18)}<span>${theme()==='dark'?'Switch to light theme':'Switch to dark theme'}</span></button></nav>
   <main>${inner}</main>
-  <div class="wrap"><footer><span>READYLINK. Prototype area: Brgy. Alangilan, Batangas City. Demo data is saved in this browser only.</span><span style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">AI suggests. Admins verify.<button class="linkbtn" style="padding:0;font-size:13px" data-act="reset">Reset demo data</button></span></footer></div>`}
+  <div class="wrap"><footer><span>READYLINK. Prototype area: Brgy. Alangilan, Batangas City. ${API.mode==='server'?'Reports are saved in the READYLINK database on this computer. AI results, admin actions and offline sync are still demo.':'Demo data is saved in this browser only.'}</span><span style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">AI suggests. Admins verify.<button class="linkbtn" style="padding:0;font-size:13px" data-act="simoffline" aria-pressed="${NET.sim}">Simulate offline: ${NET.sim?'on':'off'} (demo)</button>${API.mode==='server'?'':'<button class="linkbtn" style="padding:0;font-size:13px" data-act="reset">Reset demo data</button>'}</span></footer></div>`}
 function admShell(inner,on){
   const open=R.filter(r=>r.st==='Pending').length;
   const L=[['admin','Overview','grid'],['admin/reports','Reports','list'],['admin/map','Risk map','map']];

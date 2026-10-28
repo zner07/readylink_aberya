@@ -4,7 +4,7 @@
    3. UI STATE  (frontend only, safe to keep)
    ========================================================= */
 const blankFilter=()=>({lv:'all',cat:'all',st:'all',q:''});
-const S={admin:false,pf:blankFilter(),af:blankFilter(),sel:null,heroSel:'RL-029',next:null,prev:null,dlg:null};
+const S={admin:false,pf:blankFilter(),af:blankFilter(),sel:null,heroSel:'RL-029',mapView:'markers',hot:null,mine:{state:'idle',message:''},next:null,prev:null,dlg:null};
 const F=()=>location.hash.startsWith('#/admin')?S.af:S.pf;       // public map and admin keep separate filters
 const newDraft=()=>({step:1,img:null,fname:'',type:null,x:null,y:null,desc:'',locating:false,scan:false,res:null,done:null,sending:false,run:0});
 let D=newDraft();                                                // the in-progress "Report a risk" draft
